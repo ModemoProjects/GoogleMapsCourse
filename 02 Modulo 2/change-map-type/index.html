@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <title>Cambio de Tipo de Mapa - Google Maps</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <!-- 
+    <script type="module" src="./index.js"></script>
+    
+    -->
+    <script type="module" src="./index-json-version.js"></script>
+    <!-- -->
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🌍 Cambio de Tipo de Mapa</h1>
+            <p>Ejemplo interactivo para presentación - Google Maps API</p>
+        </header>
+
+        <div class="controls">
+            <h3>Selecciona el tipo de mapa:</h3>
+            <div class="button-group">
+                <button id="roadmap" class="map-btn active" data-type="roadmap">
+                    🗺️ Roadmap
+                </button>
+                <button id="satellite" class="map-btn" data-type="satellite">
+                    🛰️ Satellite
+                </button>
+                <button id="hybrid" class="map-btn" data-type="hybrid">
+                    🔀 Hybrid
+                </button>
+                <button id="terrain" class="map-btn" data-type="terrain">
+                    🏔️ Terrain
+                </button>
+                <button id="custom" class="map-btn custom-btn" data-type="custom">
+                    🎨 Personalizado
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel de configuración personalizada -->
+        <div id="custom-panel" class="custom-panel hidden">
+            <h3>🎨 Configuración de Mapa Personalizado</h3>
+            <div class="custom-controls">
+                <div class="control-group">
+                    <label for="custom-style">Estilo del mapa:</label>
+                    <select id="custom-style">
+                        <option value="night">🌙 Modo Nocturno</option>
+                        <option value="retro">📺 Estilo Retro</option>
+                        <option value="grayscale">⚫ Escala de Grises</option>
+                        <option value="high-contrast">⚡ Alto Contraste</option>
+                        <option value="nature">🌿 Naturaleza</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="custom-zoom">Zoom personalizado:</label>
+                    <input type="range" id="custom-zoom" min="1" max="20" value="11">
+                    <span id="zoom-value">11</span>
+                    <small class="zoom-description">1 = Vista mundial | 20 = Vista de calle</small>
+                </div>
+                <button id="apply-custom" class="apply-btn">✨ Aplicar Personalización</button>
+            </div>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="info-panel">
+            <h3>ℹ️ Información del Mapa</h3>
+            <p><strong>Tipo actual:</strong> <span id="current-type">roadmap</span></p>
+            <p><strong>Centro:</strong> <span id="coordinates">21.123, -101.665</span></p>
+            <p><strong>Zoom:</strong> <span id="zoom-level">11</span></p>
+            <p><strong>Estilo personalizado:</strong> <span id="custom-style-info">Ninguno</span></p>
+        </div>
+    </div>
+
+    <!-- prettier-ignore -->
+    <script>(g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+            ({ key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8", v: "weekly" });</script>
+</body>
+
+</html>

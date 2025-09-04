@@ -17,26 +17,19 @@ Curso práctico para aprender Google Maps API con ejemplos de código listos par
 - `change-map-type/` - Cambio de tipos de mapa
 - `SimpleMap/` & `ChangeMapType/` - Apps Android
 
-## 🚀 Cómo usar
-
-1. **Instala dependencias:**
-   ```bash
-   npm install
-   ```
-
-2. **Ejecuta un ejemplo:**
-   ```bash
-   cd "01 Modulo 1/icon-simple"
-   npm start
-   ```
-
-3. **Abre tu navegador** en la URL mostrada
-
 ## ⚙️ Requisitos
 
+### Web
 - Node.js
 - API Key de Google Maps
 - Navegador web
+
+### Android
+- Android Studio
+- Android SDK (API 21+)
+- Google Play Services
+- API Key de Google Maps (Android)
+- Dispositivo Android o emulador
 
 ## 📚 Tecnologías
 

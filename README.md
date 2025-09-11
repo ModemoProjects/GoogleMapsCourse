@@ -17,6 +17,14 @@ Curso práctico para aprender Google Maps API con ejemplos de código listos par
 - `change-map-type/` - Cambio de tipos de mapa
 - `SimpleMap/` & `ChangeMapType/` - Apps Android
 
+### Módulo 3 - Mapas Interactivos
+- `draw-map/` - Dibujo en mapas (Web)
+- `events-map/` - Eventos de mapa (Web)
+- `marker-infowindow/` - Marcadores con ventanas de información (Web)
+- `draw_map/` - App Flutter para dibujo en mapas
+- `events_map/` - App Flutter para eventos de mapa
+- `marker_infowindow/` - App Flutter con marcadores e info windows
+
 ## ⚙️ Requisitos
 
 ### Web
@@ -31,12 +39,20 @@ Curso práctico para aprender Google Maps API con ejemplos de código listos par
 - API Key de Google Maps (Android)
 - Dispositivo Android o emulador
 
+### Flutter
+- Flutter SDK
+- Dart SDK
+- Android Studio / VS Code
+- API Key de Google Maps (Android/iOS)
+- Dispositivo móvil o emulador
+
 ## 📚 Tecnologías
 
 - JavaScript/TypeScript
 - Google Maps API
 - Node.js/Express
 - Android (Kotlin)
+- Flutter/Dart
 
 ---
 

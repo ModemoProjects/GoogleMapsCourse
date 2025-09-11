@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo de Eventos en Google Maps</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <!-- Panel de controles -->
+    <div id="controls-panel">
+        <h2> Demo de Eventos en Google Maps</h2>
+
+        <div class="control-group">
+            <h3>📍 Información del Mapa</h3>
+            <div id="map-info">
+                <p><strong>Centro:</strong> <span id="center-coords">Cargando...</span></p>
+                <p><strong>Zoom:</strong> <span id="zoom-level">-</span></p>
+                <p><strong>Último clic:</strong> <span id="last-click">Ninguno</span></p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3> Controles de Eventos</h3>
+            <button id="toggle-click-events" class="btn btn-primary">Activar Clics</button>
+            <button id="toggle-drag-events" class="btn btn-secondary">Activar Arrastre</button>
+            <button id="add-marker-btn" class="btn btn-success">Agregar Marcador</button>
+            <button id="clear-markers-btn" class="btn btn-warning">Limpiar Marcadores</button>
+        </div>
+
+        <div class="control-group">
+            <h3> Estadísticas</h3>
+            <div id="stats">
+                <p>Clics realizados: <span id="click-count">0</span></p>
+                <p>Marcadores: <span id="marker-count">0</span></p>
+                <p>Eventos de zoom: <span id="zoom-count">0</span></p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>🔧 Configuración</h3>
+            <label for="map-type">Tipo de mapa:</label>
+            <select id="map-type">
+                <option value="roadmap">Carretera</option>
+                <option value="satellite">Satélite</option>
+                <option value="hybrid">Híbrido</option>
+                <option value="terrain">Terreno</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Mapa -->
+    <div id="map"></div>
+
+    <!-- Panel de eventos en tiempo real -->
+    <div id="events-log">
+        <h3> Log de Eventos</h3>
+        <div id="events-list"></div>
+        <button id="clear-log-btn" class="btn btn-small">Limpiar Log</button>
+    </div>
+
+    <!-- prettier-ignore -->
+    <script>(g => {var h, a, k, p="The Google Maps JavaScript API", c="google", l="importLibrary", q="__ib__", m=document, b=window; b=b[c]||(b[c]={}); var d=b.maps||(b.maps={}), r=new Set, e=new URLSearchParams, u=() => h||(h=new Promise(async (f, n) => {await (a=m.createElement("script")); e.set("libraries", [...r]+""); for(k in g) e.set(k.replace(/[A-Z]/g, t => "_"+t[0].toLowerCase()), g[k]); e.set("callback", c+".maps."+q); a.src=`https://maps.${c}apis.com/maps/api/js?`+e; d[q]=f; a.onerror=() => h=n(Error(p+" could not load.")); a.nonce=m.querySelector("script[nonce]")?.nonce||""; m.head.append(a)})); d[l]? console.warn(p+" only loads once. Ignoring:", g):d[l]=(f, ...n) => r.add(f)&&u().then(() => d[l](f, ...n))})
+            ({key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8", v: "weekly", libraries: "geometry,drawing"});</script>
+</body>
+
+</html>

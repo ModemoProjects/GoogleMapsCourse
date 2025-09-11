@@ -1,0 +1,300 @@
+/* 
+ * Layout principal con sidebar y mapa
+ */
+.container {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar {
+    width: 350px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-container {
+    flex: 1;
+    padding: 10px;
+    background-color: #f5f5f5;
+}
+
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+#map {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Estilos adicionales para mejorar la presentación */
+body {
+    overflow: hidden;
+}
+
+/* Estilos para los InfoWindows personalizados */
+.gm-style-iw {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.gm-style-iw-d {
+    overflow: hidden !important;
+    border-radius: 8px !important;
+}
+
+/* Estilos para los botones de cierre del InfoWindow */
+.gm-style-iw-tc::after {
+    background: #4285f4 !important;
+}
+
+.gm-style-iw-tc {
+    background: #4285f4 !important;
+}
+
+/* Animaciones suaves */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para las imágenes en InfoWindows */
+.gm-style-iw img {
+    border-radius: 8px 8px 0 0 !important;
+    transition: transform 0.3s ease !important;
+}
+
+.gm-style-iw img:hover {
+    transform: scale(1.05) !important;
+}
+
+/* Animaciones personalizadas para markers */
+@keyframes markerPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes markerRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes markerBounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Estilos para mejorar la apariencia de los InfoWindows */
+.gm-style-iw-d {
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.gm-style-iw-tc {
+    background: white !important;
+}
+
+.gm-style-iw-tc::after {
+    background: white !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Efectos de hover para markers */
+.gm-style-iw-c {
+    cursor: pointer !important;
+}
+
+/* Estilos para el sidebar */
+.sidebar h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+/* Estilos para los botones de ubicación */
+.location-btn {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    text-align: left;
+    width: 100%;
+}
+
+.location-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.location-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.location-btn.active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #ffd700;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 12px 30px rgba(255, 215, 0, 0.6);
+    }
+
+    100% {
+        box-shadow: 0 12px 30px rgba(255, 215, 0, 0.3);
+    }
+}
+
+.btn-icon {
+    font-size: 32px;
+    margin-right: 15px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.btn-content h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-content p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Panel de información */
+.info-panel {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-panel h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    text-align: center;
+}
+
+.info-panel p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        padding: 15px;
+    }
+
+    .map-container {
+        flex: 1;
+        padding: 5px;
+    }
+
+    #map {
+        height: 60vh;
+        border-radius: 4px;
+    }
+
+    .gm-style-iw {
+        max-width: 280px !important;
+    }
+
+    .gm-style-iw img {
+        height: 120px !important;
+    }
+
+    .buttons-container {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 10px;
+    }
+
+    .location-btn {
+        min-width: 200px;
+        flex-shrink: 0;
+    }
+}

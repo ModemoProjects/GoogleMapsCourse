@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Autocompletar - Geocoding Manual</title>
+    <link rel="stylesheet" type="text/css" href="./style-geocoding-manual.css">
+</head>
+
+<body>
+    <!-- 
+    ===========================================
+    INSTRUCCIONES DE CONFIGURACIÓN DE API KEY
+    ===========================================
+    
+    1. Reemplaza "TU_API_KEY_AQUI" con tu API key de Google Maps
+    2. Restringe la API key en Google Cloud Console:
+       - Ve a APIs & Services > Credentials
+       - Selecciona tu API key
+       - En "Application restrictions" selecciona "HTTP referrers"
+       - Agrega: https://tu-dominio.com/* y http://localhost:*/*
+    3. Habilita las siguientes APIs:
+       - Maps JavaScript API
+       - Geocoding API (NO necesitas Places API)
+    4. Configura cuotas y límites según tus necesidades
+    
+    VENTAJAS de búsqueda manual:
+    - Control total del usuario sobre cuándo buscar
+    - Menos llamadas a la API (más eficiente)
+    - Mejor para usuarios que saben exactamente qué quieren
+    - Sin sugerencias automáticas que distraigan
+    
+    DESVENTAJAS:
+    - Requiere acción del usuario para cada búsqueda
+    - No hay autocompletar en tiempo real
+    - Menos conveniente para exploración
+    -->
+
+    <div class="container">
+        <header>
+            <h1>Demo Búsqueda Manual - Geocoding</h1>
+            <p>Búsqueda controlada con Google Maps Geocoding API</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-section">
+                <form id="addressForm" class="address-form">
+                    <div class="form-group">
+                        <label for="addressInput" class="form-label">
+                            Dirección <span class="required">*</span>
+                        </label>
+                        <div class="input-container">
+                            <input type="text" id="addressInput" class="form-input"
+                                placeholder="Escribe una dirección completa..." autocomplete="off"
+                                aria-describedby="addressHelp" required>
+                            <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+                        <div id="addressHelp" class="form-help">
+                            Escribe una dirección completa y haz clic en "Buscar"
+                        </div>
+                    </div>
+
+                    <div class="search-controls">
+                        <button type="button" id="searchButton" class="btn btn-primary">
+                            <span class="btn-icon">🔍</span>
+                            Buscar Dirección
+                        </button>
+                        <button type="button" id="clearForm" class="btn btn-secondary">
+                            <span class="btn-icon">🗑️</span>
+                            Limpiar
+                        </button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="street" class="form-label">Calle</label>
+                            <input type="text" id="street" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="number" class="form-label">Número</label>
+                            <input type="text" id="number" class="form-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="neighborhood" class="form-label">Colonia</label>
+                            <input type="text" id="neighborhood" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="form-label">Ciudad</label>
+                            <input type="text" id="city" class="form-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="state" class="form-label">Estado</label>
+                            <input type="text" id="state" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="country" class="form-label">País</label>
+                            <input type="text" id="country" class="form-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postalCode" class="form-label">Código Postal</label>
+                        <input type="text" id="postalCode" class="form-input" readonly>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="map-section">
+                <div id="map" class="map-container"></div>
+                <div class="map-info">
+                    <p>Haz clic en el mapa para obtener la dirección de esa ubicación</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics" id="analytics" style="display: none;">
+            <h3>Información de Búsqueda</h3>
+            <div id="analyticsContent"></div>
+        </div>
+    </div>
+
+    <!-- Google Maps JavaScript API - Solo Geocoding -->
+    <script src="./index-geocoding-manual.js"></script>
+</body>
+
+</html>

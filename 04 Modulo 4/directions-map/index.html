@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Directions Demo - Rutas Avanzadas</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+
+    <!-- 
+    🔑 CONFIGURACIÓN DE API KEY DE GOOGLE MAPS:
+    
+    Para que funcione este demo, necesitas:
+    
+    1. 📝 Obtener una API Key:
+       - Ve a https://console.cloud.google.com/
+       - Crea un proyecto o selecciona uno existente
+       - Ve a "APIs & Services" > "Credentials"
+       - Crea una nueva API Key
+    
+    2. 🔒 Configurar restricciones de seguridad:
+       - Selecciona tu API key
+       - En "Application restrictions" selecciona "HTTP referrers"
+       - Agrega: localhost:3000/*, tu-dominio.com/*
+    
+    3. 🛠️ Habilitar APIs necesarias:
+       - Maps JavaScript API
+       - Directions API  
+       - Places API
+       - Traffic Layer API (opcional, para tráfico en tiempo real)
+    
+    4. ✏️ Reemplazar la clave:
+       - Busca "TU_API_KEY_AQUI" en este archivo
+       - Reemplázala con tu clave real
+    -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- ======================================== -->
+        <!-- 🎛️ PANEL DE CONTROL (IZQUIERDA) -->
+        <!-- ======================================== -->
+        <div class="control-panel">
+            <h1>🗺️ Demo de Rutas Google Maps</h1>
+
+            <!-- 📍 CONFIGURACIÓN BÁSICA DE RUTA -->
+            <div class="route-config">
+                <div class="input-group">
+                    <label for="origin">Origen:</label>
+                    <!-- 🔍 Autocomplete de Google Places para ciudades mexicanas -->
+                    <input type="text" id="origin" placeholder="Ciudad de origen..." />
+                </div>
+
+                <div class="input-group">
+                    <label for="destination">Destino:</label>
+                    <!-- 🔍 Autocomplete de Google Places para ciudades mexicanas -->
+                    <input type="text" id="destination" placeholder="Ciudad de destino..." />
+                </div>
+            </div>
+
+            <!-- 🛑 PARADAS INTERMEDIAS (WAYPOINTS) -->
+            <div class="waypoints-section">
+                <h3>Paradas Intermedias</h3>
+                <!-- 📍 Lista dinámica de waypoints (se llena con JavaScript) -->
+                <div id="waypoints-list"></div>
+                <!-- ➕ Botón para agregar nuevas paradas (máximo 8) -->
+                <button id="add-waypoint" class="btn btn-secondary">+ Agregar Parada</button>
+            </div>
+
+            <!-- ⚙️ OPCIONES AVANZADAS DE RUTA -->
+            <div class="route-options">
+                <h3>Opciones de Ruta</h3>
+
+                <!-- 🎯 OPTIMIZACIÓN DE WAYPOINTS -->
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="optimize-waypoints" checked>
+                        <span class="checkmark"></span>
+                        Optimizar orden de paradas
+                        <!-- ⭐ CLAVE: Google Maps reorganiza automáticamente las paradas para la ruta más eficiente -->
+                    </label>
+                </div>
+
+                <!-- 🚧 EVITAR PEAJES -->
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="avoid-tolls">
+                        <span class="checkmark"></span>
+                        Evitar peajes
+                    </label>
+                </div>
+
+                <!-- 🛣️ EVITAR AUTOPISTAS -->
+                <div class="option-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="avoid-highways">
+                        <span class="checkmark"></span>
+                        Evitar autopistas
+                    </label>
+                </div>
+
+                <!-- 🚗 MODO DE VIAJE -->
+                <div class="option-group">
+                    <label for="travel-mode">Modo de viaje:</label>
+                    <select id="travel-mode">
+                        <option value="DRIVING">🚗 Conducir</option>
+                        <option value="WALKING">🚶 Caminar</option>
+                        <option value="TRANSIT">🚌 Transporte público</option>
+                        <option value="BICYCLING">🚴 Bicicleta</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 🚀 BOTONES DE ACCIÓN PRINCIPALES -->
+            <div class="action-buttons">
+                <!-- 🎯 Botón principal: Calcula la ruta con todas las opciones -->
+                <button id="calculate-route" class="btn btn-primary">Calcular Ruta</button>
+                <!-- 🔄 Botón: Muestra rutas alternativas si están disponibles -->
+                <button id="show-alternatives" class="btn btn-secondary">Ver Alternativas</button>
+                <!-- 🗑️ Botón: Limpia la ruta actual y resetea la interfaz -->
+                <button id="clear-route" class="btn btn-danger">Limpiar</button>
+            </div>
+
+            <!-- ⛽ CONFIGURACIÓN DE COMBUSTIBLE -->
+            <div class="fuel-config">
+                <h3>Configuración de Combustible</h3>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="fuel-efficiency">Eficiencia (km/L):</label>
+                        <!-- 🚗 Eficiencia del vehículo para calcular consumo -->
+                        <input type="number" id="fuel-efficiency" value="12" min="1" max="50">
+                    </div>
+                    <div class="input-group">
+                        <label for="fuel-price">Precio por litro ($):</label>
+                        <!-- 💰 Precio del combustible para calcular costo total -->
+                        <input type="number" id="fuel-price" value="25" min="1" step="0.1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================== -->
+        <!-- 📊 PANEL DE RESULTADOS (DERECHA) -->
+        <!-- ======================================== -->
+        <div class="results-panel">
+            <!-- 📈 MÉTRICAS PRINCIPALES DE LA RUTA -->
+            <div class="route-metrics" id="route-metrics" style="display: none;">
+                <h3>Resumen de Ruta</h3>
+                <div class="metrics-grid">
+                    <!-- 📏 Distancia total (suma de todos los legs) -->
+                    <div class="metric">
+                        <span class="metric-label">Distancia:</span>
+                        <span class="metric-value" id="total-distance">-</span>
+                    </div>
+                    <!-- ⏰ Tiempo total (con o sin tráfico) -->
+                    <div class="metric">
+                        <span class="metric-label">Tiempo:</span>
+                        <span class="metric-value" id="total-duration">-</span>
+                    </div>
+                    <!-- ⛽ Costo estimado de combustible -->
+                    <div class="metric">
+                        <span class="metric-label">Costo combustible:</span>
+                        <span class="metric-value" id="fuel-cost">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔄 RUTAS ALTERNATIVAS -->
+            <div class="alternatives-section" id="alternatives-section" style="display: none;">
+                <h3>Rutas Alternativas</h3>
+                <!-- 📍 Lista de rutas alternativas (se llena con JavaScript) -->
+                <div id="alternatives-list"></div>
+            </div>
+
+            <!-- 📋 INSTRUCCIONES TURN-BY-TURN -->
+            <div class="directions-panel" id="directions-panel" style="display: none;">
+                <h3>Instrucciones de Ruta</h3>
+                <!-- 🗺️ Instrucciones detalladas paso a paso (se llena con JavaScript) -->
+                <div id="directions-list"></div>
+            </div>
+
+            <!-- 💬 MENSAJES DE ESTADO Y ERRORES -->
+            <div class="status-messages" id="status-messages"></div>
+        </div>
+
+        <!-- ======================================== -->
+        <!-- 🗺️ MAPA PRINCIPAL (CENTRO) -->
+        <!-- ======================================== -->
+        <div class="map-container">
+            <!-- 🗺️ Instancia de Google Maps (se inicializa con JavaScript) -->
+            <div id="map"></div>
+            <!-- ⏳ Overlay de carga mientras se calcula la ruta -->
+            <div class="loading-overlay" id="loading-overlay" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Calculando ruta...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- 🌐 CARGA DE GOOGLE MAPS API -->
+    <!-- ======================================== -->
+    <script>
+        // 🔑 CONFIGURACIÓN DE API KEY
+        // ⚠️ IMPORTANTE: Reemplaza con tu clave real de Google Maps
+        const GOOGLE_MAPS_API_KEY="AIzaSyACnySD7qVyCSIrSZujmtSFlHesnd3eKos";
+
+        // 📚 CARGAR GOOGLE MAPS API CON LIBRERÍAS NECESARIAS
+        // Este script carga automáticamente las librerías que necesitamos:
+        // - maps: Mapa principal
+        // - places: Autocomplete de lugares
+        // - geometry: Cálculos geométricos
+        (g => {
+            var h, a, k, p="The Google Maps JavaScript API", c="google", l="importLibrary", q="__ib__", m=document, b=window;
+            b=b[c]||(b[c]={});
+            var d=b.maps||(b.maps={}), r=new Set, e=new URLSearchParams, u=() => h||(h=new Promise(async (f, n) => {
+                await (a=m.createElement("script"));
+                e.set("libraries", [...r]+"");
+                for(k in g) e.set(k.replace(/[A-Z]/g, t => "_"+t[0].toLowerCase()), g[k]);
+                e.set("callback", c+".maps."+q);
+                a.src=`https://maps.${c}apis.com/maps/api/js?`+e;
+                d[q]=f;
+                a.onerror=() => h=n(Error(p+" could not load."));
+                a.nonce=m.querySelector("script[nonce]")?.nonce||"";
+                m.head.append(a)
+            }));
+            d[l]? console.warn(p+" only loads once. Ignoring:", g):d[l]=(f, ...n) => r.add(f)&&u().then(() => d[l](f, ...n))
+        })({
+            key: GOOGLE_MAPS_API_KEY,        // Tu API key
+            v: "weekly",                     // Versión semanal (más estable)
+            libraries: ["places", "geometry"] // Librerías necesarias para el demo
+        });
+    </script>
+
+    <script type="module" src="./index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Places Demo - Búsqueda y Detalles de Lugares</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <!-- Header con controles principales -->
+    <header class="header">
+        <div class="search-container">
+            <!-- Input principal con Autocomplete -->
+            <div class="search-input-group">
+                <label for="place-input" class="visually-hidden">Buscar lugar</label>
+                <input type="text" id="place-input" placeholder="Buscar lugar, ciudad o POI..." autocomplete="off"
+                    aria-describedby="search-help">
+                <button id="search-btn" type="button" aria-label="Buscar lugares">
+                    <span class="search-icon">🔍</span>
+                </button>
+            </div>
+
+            <!-- Input para ciudad específica -->
+            <div class="search-input-group">
+                <label for="city-input" class="visually-hidden">Buscar en ciudad específica</label>
+                <input type="text" id="city-input" placeholder="Buscar en ciudad específica..." autocomplete="off">
+            </div>
+        </div>
+
+        <!-- Controles de filtros -->
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="type-filter">Tipo de lugar:</label>
+                <select id="type-filter">
+                    <option value="">Todos los tipos</option>
+                    <option value="restaurant">Restaurante</option>
+                    <option value="lodging">Hospedaje</option>
+                    <option value="tourist_attraction">Atracción turística</option>
+                    <option value="shopping_mall">Centro comercial</option>
+                    <option value="gas_station">Gasolinera</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="bank">Banco</option>
+                    <option value="pharmacy">Farmacia</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="keyword-filter">Palabra clave:</label>
+                <input type="text" id="keyword-filter" placeholder="ej: tacos, hotel, museo...">
+            </div>
+
+            <div class="filter-group">
+                <label for="radius-filter">Radio (metros):</label>
+                <input type="range" id="radius-filter" min="100" max="50000" value="1000" step="100">
+                <span id="radius-value">1000m</span>
+            </div>
+
+            <div class="filter-group">
+                <label for="price-min">Precio mínimo:</label>
+                <select id="price-min">
+                    <option value="">Cualquiera</option>
+                    <option value="0">Gratis</option>
+                    <option value="1">$</option>
+                    <option value="2">$$</option>
+                    <option value="3">$$$</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="price-max">Precio máximo:</label>
+                <select id="price-max">
+                    <option value="">Cualquiera</option>
+                    <option value="1">$</option>
+                    <option value="2">$$</option>
+                    <option value="3">$$$</option>
+                    <option value="4">$$$$</option>
+                </select>
+            </div>
+
+            <div class="filter-group checkbox-group">
+                <label>
+                    <input type="checkbox" id="open-now">
+                    Abierto ahora
+                </label>
+            </div>
+
+            <div class="filter-group">
+                <label for="language-filter">Idioma:</label>
+                <select id="language-filter">
+                    <option value="es-419">Español (Latinoamérica)</option>
+                    <option value="es">Español (España)</option>
+                    <option value="en">English</option>
+                    <option value="pt-BR">Português (Brasil)</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="region-filter">Región:</label>
+                <select id="region-filter">
+                    <option value="mx">México</option>
+                    <option value="us">Estados Unidos</option>
+                    <option value="ca">Canadá</option>
+                    <option value="br">Brasil</option>
+                    <option value="ar">Argentina</option>
+                </select>
+            </div>
+
+            <!-- Restricciones geográficas -->
+            <div class="filter-group checkbox-group">
+                <label>
+                    <input type="checkbox" id="restrict-country">
+                    Restringir a país seleccionado
+                </label>
+            </div>
+
+            <div class="filter-group checkbox-group">
+                <label>
+                    <input type="checkbox" id="restrict-state">
+                    Restringir a estado/región (Jalisco, MX)
+                </label>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="action-buttons">
+            <button id="nearby-search-btn" type="button">Buscar cerca de mí</button>
+            <button id="clear-filters-btn" type="button">Limpiar filtros</button>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <!-- Panel lateral con resultados -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Resultados</h2>
+                <button id="toggle-sidebar" type="button" aria-label="Ocultar panel">
+                    <span>←</span>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <div id="loading-indicator" class="loading hidden">
+                    <div class="spinner"></div>
+                    <span>Buscando lugares...</span>
+                </div>
+
+                <div id="error-message" class="error hidden"></div>
+
+                <div id="results-list" class="results-list"></div>
+
+                <div id="pagination" class="pagination hidden">
+                    <button id="load-more-btn" type="button">Cargar más resultados</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mapa -->
+        <div class="map-container">
+            <div id="map"></div>
+            <div id="map-overlay" class="map-overlay hidden">
+                <div class="overlay-content">
+                    <h3>Permisos de ubicación</h3>
+                    <p>Para buscar lugares cerca de ti, necesitamos acceso a tu ubicación.</p>
+                    <button id="request-location" type="button">Permitir ubicación</button>
+                    <button id="use-default-location" type="button">Usar ubicación por defecto</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de detalles del lugar -->
+    <div id="place-details-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="place-name"></h2>
+                <button id="close-modal" type="button" aria-label="Cerrar detalles">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="place-details-content"></div>
+        </div>
+    </div>
+
+    <!-- Scripts de Google Maps -->
+    <!-- IMPORTANTE: En producción, restringir esta API key a dominios específicos -->
+    <!-- Habilitar solo: Maps JavaScript API + Places API -->
+    <script>
+        (g => {
+            var h, a, k, p="The Google Maps JavaScript API", c="google", l="importLibrary", q="__ib__", m=document, b=window;
+            b=b[c]||(b[c]={});
+            var d=b.maps||(b.maps={}), r=new Set, e=new URLSearchParams, u=() => h||(h=new Promise(async (f, n) => {
+                await (a=m.createElement("script"));
+                e.set("libraries", [...r]+"");
+                for(k in g) e.set(k.replace(/[A-Z]/g, t => "_"+t[0].toLowerCase()), g[k]);
+                e.set("callback", c+".maps."+q);
+                a.src=`https://maps.${c}apis.com/maps/api/js?`+e;
+                d[q]=f;
+                a.onerror=() => h=n(Error(p+" could not load."));
+                a.nonce=m.querySelector("script[nonce]")?.nonce||"";
+                m.head.append(a)
+            }));
+            d[l]? console.warn(p+" only loads once. Ignoring:", g):d[l]=(f, ...n) => r.add(f)&&u().then(() => d[l](f, ...n))
+        })({
+            key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8",
+            v: "weekly",
+            libraries: ["places", "geometry"]
+        });
+    </script>
+</body>
+
+</html>

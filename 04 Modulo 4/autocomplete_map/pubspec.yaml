@@ -1,0 +1,46 @@
+name: autocomplete_map
+description: "Demo de Flutter con Google Maps, autocompletado de direcciones y geocoding"
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Google Maps y geocoding
+  google_maps_flutter: ^2.5.0
+  geocoding: ^2.1.1
+
+  # HTTP para Places API
+  http: ^1.1.0
+
+  # Localización
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+  # Manejo de variables de entorno
+  flutter_dotenv: ^5.1.0
+
+  # Permisos de ubicación
+  permission_handler: ^11.0.1
+
+  # Debounce para autocompletado
+  timer_builder: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Assets para variables de entorno
+  assets:
+    - .env

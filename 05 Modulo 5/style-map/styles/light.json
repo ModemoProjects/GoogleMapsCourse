@@ -1,0 +1,8 @@
+[
+  {
+    "comment": "Tema Claro - Estilo por defecto de Google Maps",
+    "description": "Utiliza los estilos predeterminados de Google Maps sin modificaciones",
+    "useCase": "Aplicaciones generales, navegación básica",
+    "features": ["Colores naturales", "Máxima legibilidad", "POIs visibles"]
+  }
+]

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estilos Temáticos - Google Maps</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .theme-button {
+            padding: 10px 15px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .theme-button:hover {
+            background-color: #3367d6;
+        }
+        .theme-button.active {
+            background-color: #34a853;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Estilos Temáticos por Caso de Uso</h1>
+    <p>Diferentes estilos optimizados para retail, logística y movilidad.</p>
+    
+    <div class="controls">
+        <button class="theme-button" onclick="applyThematicStyle('retail')">Retail</button>
+        <button class="theme-button" onclick="applyThematicStyle('logistics')">Logística</button>
+        <button class="theme-button" onclick="applyThematicStyle('mobility')">Movilidad</button>
+        <button class="theme-button" onclick="applyThematicStyle('default')">Por Defecto</button>
+    </div>
+    
+    <div class="description" id="description">
+        Selecciona un estilo temático para ver cómo se adapta el mapa a diferentes casos de uso.
+    </div>
+    
+    <div id="map"></div>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=maps&language=es-419"></script>
+    <script src="script.js"></script>
+</body>
+</html>

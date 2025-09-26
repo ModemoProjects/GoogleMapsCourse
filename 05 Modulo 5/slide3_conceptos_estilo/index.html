@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es-419">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptos de Estilo - Google Maps</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+
+        .controls {
+            margin: 10px 0;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3367d6;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Conceptos de Estilo - Google Maps</h1>
+    <p>Ejemplo básico de aplicación de estilos JSON personalizados al mapa.</p>
+
+    <div class="controls">
+        <button onclick="applyCustomStyle()">Aplicar Estilo Personalizado</button>
+        <button onclick="resetStyle()">Restablecer Estilo</button>
+    </div>
+
+    <div id="map"></div>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=maps&language=es-419"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

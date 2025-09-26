@@ -241,6 +241,17 @@ const DEFAULT_ZOOM = 13;
 - Cuando el radio es < 100m: usa `rankBy: DISTANCE`
 - Google Maps no permite usar ambas propiedades simultáneamente
 
+### Filtro "Abierto ahora" no funciona
+- **Solucionado**: El demo solo incluye `openNow: true` cuando el checkbox está marcado
+- Google Maps API ignora `openNow: false`, por lo que se omite la propiedad cuando está desmarcado
+- Debug agregado para verificar el estado del filtro en consola
+
+### Error al mostrar detalles del lugar
+- **Solucionado**: Agregado manejo de errores robusto en `displayPlaceDetails()`
+- `isOpen()` ahora recibe la fecha actual como parámetro: `hours.isOpen(new Date())`
+- Try-catch individual para fotos, reseñas y horarios
+- Fallbacks apropiados cuando los datos no están disponibles
+
 ## 📱 Compatibilidad
 
 - **Navegadores**: Chrome, Firefox, Safari, Edge (versiones modernas)

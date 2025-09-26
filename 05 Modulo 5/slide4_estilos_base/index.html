@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estilos Base: Claro/Oscuro - Google Maps</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .theme-label {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Estilos Base: Claro/Oscuro</h1>
+    <p>Toggle entre modo claro y oscuro con estilos básicos.</p>
+    
+    <div class="controls">
+        <label class="toggle-switch">
+            <input type="checkbox" id="themeToggle" onchange="toggleMapTheme(this.checked)">
+            <span class="slider"></span>
+        </label>
+        <span class="theme-label" id="themeLabel">Modo Claro</span>
+    </div>
+    
+    <div id="map"></div>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=maps&language=es-419"></script>
+    <script src="script.js"></script>
+</body>
+</html>

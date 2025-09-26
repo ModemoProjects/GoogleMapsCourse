@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es-419">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps - Demo Integral con Temas Conmutables</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <!-- Panel de control de temas -->
+    <div class="control-panel" role="region" aria-label="Panel de control del mapa">
+        <h1>Google Maps - Demo Integral</h1>
+
+        <!-- Selector de temas -->
+        <div class="theme-selector">
+            <label for="theme-select" class="theme-label">Seleccionar Tema:</label>
+            <select id="theme-select" aria-label="Selector de tema del mapa" role="combobox">
+                <option value="light">🌞 Tema Claro</option>
+                <option value="dark">🌙 Tema Oscuro</option>
+                <option value="minimal">📊 Mapa Minimalista</option>
+                <option value="mobility">🚗 Movilidad</option>
+                <option value="retail">🛍️ Retail</option>
+                <option value="logistics">📦 Logística</option>
+            </select>
+        </div>
+
+        <!-- Controles específicos por tema -->
+        <div class="theme-controls">
+            <!-- Controles para tema movilidad -->
+            <div id="mobility-controls" class="theme-control-group" style="display: none;">
+                <label class="control-label">
+                    <input type="checkbox" id="traffic-toggle" aria-describedby="traffic-help">
+                    Mostrar Tráfico en Tiempo Real
+                </label>
+                <small id="traffic-help" class="help-text">Activa la capa de tráfico para ver condiciones
+                    actuales</small>
+            </div>
+
+            <!-- Controles para tema retail -->
+            <div id="retail-controls" class="theme-control-group" style="display: none;">
+                <button id="load-retail-pois" class="action-button" aria-describedby="retail-help">
+                    Cargar POIs Comerciales
+                </button>
+                <small id="retail-help" class="help-text">Haz clic en los marcadores para ver detalles y
+                    horarios</small>
+            </div>
+
+            <!-- Controles para tema logística -->
+            <div id="logistics-controls" class="theme-control-group" style="display: none;">
+                <button id="load-logistics-data" class="action-button" aria-describedby="logistics-help">
+                    Cargar Datos Logísticos
+                </button>
+                <small id="logistics-help" class="help-text">Muestra zonas de cobertura y puntos de distribución</small>
+            </div>
+        </div>
+
+        <!-- Panel de información -->
+        <div id="info-panel" class="info-panel" role="region" aria-label="Información del lugar seleccionado"
+            style="display: none;">
+            <h3 id="place-name">Nombre del Lugar</h3>
+            <div id="place-details">
+                <!-- Los detalles se cargarán dinámicamente -->
+            </div>
+            <button id="close-info" class="close-button" aria-label="Cerrar panel de información">×</button>
+        </div>
+    </div>
+
+    <!-- Contenedor del mapa -->
+    <div id="map" role="application" aria-label="Mapa interactivo"></div>
+
+    <!-- Loading indicator -->
+    <div id="loading" class="loading-indicator" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Cargando mapa...</p>
+    </div>
+
+    <!-- Google Maps API -->
+    <!-- prettier-ignore -->
+    <script>(g => {var h, a, k, p="The Google Maps JavaScript API", c="google", l="importLibrary", q="__ib__", m=document, b=window; b=b[c]||(b[c]={}); var d=b.maps||(b.maps={}), r=new Set, e=new URLSearchParams, u=() => h||(h=new Promise(async (f, n) => {await (a=m.createElement("script")); e.set("libraries", [...r]+""); for(k in g) e.set(k.replace(/[A-Z]/g, t => "_"+t[0].toLowerCase()), g[k]); e.set("callback", c+".maps."+q); a.src=`https://maps.${c}apis.com/maps/api/js?`+e; d[q]=f; a.onerror=() => h=n(Error(p+" could not load.")); a.nonce=m.querySelector("script[nonce]")?.nonce||""; m.head.append(a)})); d[l]? console.warn(p+" only loads once. Ignoring:", g):d[l]=(f, ...n) => r.add(f)&&u().then(() => d[l](f, ...n))})
+            ({key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8", v: "weekly", libraries: ["places", "geometry"], language: "es-419", region: "MX"});</script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "description": "Configuración central de estilos para Google Maps Demo",
+  "themes": {
+    "light": {
+      "file": "light.json",
+      "name": "Tema Claro",
+      "icon": "🌞",
+      "description": "Estilo por defecto de Google Maps",
+      "useCase": "Aplicaciones generales, navegación básica",
+      "features": ["Colores naturales", "Máxima legibilidad", "POIs visibles"]
+    },
+    "dark": {
+      "file": "dark.json",
+      "name": "Tema Oscuro",
+      "icon": "🌙",
+      "description": "Estilo nocturno con colores oscuros",
+      "useCase": "Aplicaciones nocturnas, modo oscuro, ahorro de batería",
+      "features": ["Colores oscuros", "Alto contraste", "Reducción de fatiga visual"]
+    },
+    "minimal": {
+      "file": "minimal.json",
+      "name": "Mapa Minimalista",
+      "icon": "📊",
+      "description": "Oculta POIs no esenciales, ideal para dashboards",
+      "useCase": "Dashboards empresariales, visualización de datos, mapas de calor",
+      "features": ["POIs ocultos", "Etiquetas simplificadas", "Máximo enfoque en overlays"]
+    },
+    "mobility": {
+      "file": "mobility.json",
+      "name": "Movilidad",
+      "icon": "🚗",
+      "description": "Resalta red vial, capa de tráfico y rutas",
+      "useCase": "Aplicaciones de transporte, navegación, análisis de tráfico",
+      "features": ["Red vial resaltada", "Colores por tipo de vía", "POIs de tránsito visibles"]
+    },
+    "retail": {
+      "file": "retail.json",
+      "name": "Retail",
+      "icon": "🛍️",
+      "description": "Enfatiza zonas comerciales con Places Details",
+      "useCase": "Aplicaciones de retail, búsqueda de tiendas, análisis comercial",
+      "features": ["POIs comerciales resaltados", "Zonas de compras visibles", "Colores por categoría"]
+    },
+    "logistics": {
+      "file": "logistics.json",
+      "name": "Logística",
+      "icon": "📦",
+      "description": "Zonas de cobertura y puntos de distribución",
+      "useCase": "Aplicaciones de logística, distribución, análisis de cobertura",
+      "features": ["Zonas administrativas visibles", "Colores diferenciados por zona", "POIs logísticos resaltados"]
+    }
+  },
+  "defaultTheme": "light",
+  "basePath": "./styles/",
+  "cacheEnabled": true,
+  "fallbackToEmpty": true
+}

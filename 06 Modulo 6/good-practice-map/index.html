@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es-419">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Educativo - Google Maps con Lazy Load y Rate Limiting</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <!-- MarkerClusterer oficial de Google -->
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>🗺️ Demo Educativo: Google Maps Avanzado</h1>
+        <p>Lazy Load, Rate Limiting, Static Maps y Renderizado Condicional</p>
+    </header>
+
+    <main>
+        <!-- Panel de control y métricas -->
+        <section class="controls-panel">
+            <div class="metrics-container">
+                <h3>📊 Métricas de API</h3>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <span class="metric-label">Llamadas realizadas:</span>
+                        <span id="api-calls-count" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Tiempo promedio:</span>
+                        <span id="avg-response-time" class="metric-value">0ms</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Errores:</span>
+                        <span id="error-count" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Caché hits:</span>
+                        <span id="cache-hits" class="metric-value">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Marcadores:</span>
+                        <span id="marker-count" class="metric-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="device-info">
+                <h3>📱 Información del Dispositivo</h3>
+                <div id="device-info-content">
+                    <p>Ancho: <span id="screen-width">-</span>px</p>
+                    <p>Conexión: <span id="connection-type">-</span></p>
+                    <p>Modo: <span id="render-mode">-</span></p>
+                </div>
+
+                <div class="control-switch">
+                    <h4>⚙️ Configuración de Carga</h4>
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="intersection-observer-switch">
+                            <span class="slider"></span>
+                        </label>
+                        <div class="switch-label">
+                            <span class="switch-title">IntersectionObserver</span>
+                            <span class="switch-description" id="switch-description">
+                                Carga automática por viewport deshabilitada
+                            </span>
+                        </div>
+                    </div>
+                    <div class="switch-actions">
+                        <button id="clear-settings-btn" class="clear-settings-btn"
+                            title="Limpiar configuración guardada">
+                            🗑️ Limpiar Configuración
+                        </button>
+                    </div>
+
+                    <div class="cluster-control">
+                        <h4>📍 Configuración de Marcadores</h4>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="marker-clustering-switch" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="switch-label">
+                                <span class="switch-title">Clusterización de Marcadores</span>
+                                <span class="switch-description" id="clustering-description">
+                                    Agrupa marcadores cercanos para mejor rendimiento
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenedor del mapa con lazy load -->
+        <section class="map-section">
+            <h2>📍 Mapa</h2>
+
+            <!-- Static Maps Preview (placeholder) -->
+            <div id="static-map-container" class="map-placeholder">
+                <img id="static-map-image" src="" alt="Mapa estático de vista previa" class="static-map-preview">
+                <!--
+                <div class="map-overlay">
+                    <h3>🗺️ Mapa Estático</h3>
+                    <p>Realiza una búsqueda de geocodificación para activar el mapa interactivo</p>
+                    <p class="switch-info">O habilita el IntersectionObserver para carga automática</p>
+                    <div class="map-status">
+                        <span class="status-indicator static">●</span>
+                        <span class="status-text">Modo Estático - Solo Vista Previa</span>
+                    </div>
+                </div>
+            -->
+            </div>
+
+            <!-- Contenedor del mapa interactivo (inicialmente oculto) -->
+            <div id="interactive-map-container" class="map-container" style="display: none;">
+                <div class="map-header">
+                    <h3>🗺️ Mapa Interactivo</h3>
+                    <div class="map-status">
+                        <span class="status-indicator interactive">●</span>
+                        <span class="status-text">Modo Interactivo - Totalmente Funcional</span>
+                    </div>
+                </div>
+                <div id="map" class="interactive-map"></div>
+                <div class="map-loading" id="map-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando mapa interactivo...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Panel de pruebas de API -->
+        <section class="api-test-panel">
+            <h3>🧪 Panel de Pruebas de API</h3>
+            <div class="test-controls">
+                <div class="input-group">
+                    <label for="geocoding-input">Dirección para geocodificar:</label>
+                    <input type="text" id="geocoding-input" placeholder="Ej: Av. Reforma, Ciudad de México"
+                        aria-label="Dirección para geocodificar">
+                    <button id="geocoding-btn" class="test-btn">Geocodificar</button>
+                </div>
+
+                <div class="input-group">
+                    <label for="batch-input">Direcciones para batch (separadas por ;):</label>
+                    <textarea id="batch-input" placeholder="Dirección 1; Dirección 2; Dirección 3"
+                        aria-label="Lista de direcciones para procesar en lote"></textarea>
+                    <button id="batch-geocoding-btn" class="test-btn">Procesar Lote</button>
+                </div>
+            </div>
+
+            <div class="results-container">
+                <h4>Resultados:</h4>
+                <div id="api-results" class="results-list"></div>
+            </div>
+        </section>
+
+        <!-- Logs de la consola -->
+        <section class="logs-section">
+            <h3>📝 Logs de API</h3>
+            <div id="api-logs" class="logs-container"></div>
+            <button id="clear-logs" class="clear-btn">Limpiar Logs</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>Demo educativo - Google Maps con mejores prácticas de rendimiento y manejo de APIs</p>
+    </footer>
+</body>
+
+</html>

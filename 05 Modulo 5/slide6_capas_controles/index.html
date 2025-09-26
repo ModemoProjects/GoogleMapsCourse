@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es-419">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capas y Controles Visuales - Google Maps</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .controls {
+            margin: 10px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .control-group {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .control-group h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .control-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .control-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .control-item label {
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .info {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Capas y Controles Visuales</h1>
+    <p>Activar y desactivar capas y controles del mapa.</p>
+    
+    <div class="info">
+        <strong>Nota:</strong> Las capas de tráfico y transporte tienen costo adicional en Google Maps.
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <h3>Capas del Mapa</h3>
+            <div class="control-item">
+                <input type="checkbox" id="trafficLayer" onchange="toggleTrafficLayer()">
+                <label for="trafficLayer">Capa de Tráfico</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="transitLayer" onchange="toggleTransitLayer()">
+                <label for="transitLayer">Capa de Transporte Público</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="bicyclingLayer" onchange="toggleBicyclingLayer()">
+                <label for="bicyclingLayer">Capa de Ciclovías</label>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <h3>Controles del Mapa</h3>
+            <div class="control-item">
+                <input type="checkbox" id="mapTypeControl" onchange="toggleMapTypeControl()" checked>
+                <label for="mapTypeControl">Selector de Tipo de Mapa</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="fullscreenControl" onchange="toggleFullscreenControl()" checked>
+                <label for="fullscreenControl">Control de Pantalla Completa</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="zoomControl" onchange="toggleZoomControl()" checked>
+                <label for="zoomControl">Controles de Zoom</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="streetViewControl" onchange="toggleStreetViewControl()">
+                <label for="streetViewControl">Control de Street View</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="scaleControl" onchange="toggleScaleControl()">
+                <label for="scaleControl">Escala del Mapa</label>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <h3>Configuración Adicional</h3>
+            <div class="control-item">
+                <input type="checkbox" id="myLocationEnabled" onchange="toggleMyLocation()">
+                <label for="myLocationEnabled">Mostrar Mi Ubicación</label>
+            </div>
+            <div class="control-item">
+                <input type="checkbox" id="gestureHandling" onchange="toggleGestureHandling()">
+                <label for="gestureHandling">Gestión de Gestos Cooperativa</label>
+            </div>
+        </div>
+    </div>
+    
+    <div id="map"></div>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&libraries=maps&language=es-419"></script>
+    <script src="script.js"></script>
+</body>
+</html>

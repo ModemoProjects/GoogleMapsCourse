@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 8: Resolución de Problemas y Soporte - Google Maps API</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🗺️ Módulo 8: Resolución de Problemas y Soporte</h1>
+            <p class="subtitle">Diagnóstico y solución de errores comunes en Google Maps API</p>
+        </header>
+
+        <nav class="nav">
+            <button class="nav-btn active" data-section="intro">Introducción</button>
+            <button class="nav-btn" data-section="errors">Errores Comunes</button>
+            <button class="nav-btn" data-section="performance">Rendimiento</button>
+            <button class="nav-btn" data-section="support">Soporte</button>
+            <button class="nav-btn" data-section="resources">Recursos</button>
+            <button class="nav-btn" data-section="close">Cierre</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Introducción -->
+            <section id="intro" class="section active">
+                <h2>🎯 Introducción</h2>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>¿Qué aprenderemos?</h3>
+                        <ul>
+                            <li>Diagnosticar errores comunes</li>
+                            <li>Optimizar rendimiento de mapas</li>
+                            <li>Usar herramientas de soporte</li>
+                            <li>Navegar la documentación oficial</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Objetivos del módulo</h3>
+                        <ul>
+                            <li>Resolver problemas rápidamente</li>
+                            <li>Evitar bloqueos en producción</li>
+                            <li>Implementar buenas prácticas</li>
+                            <li>Usar recursos de soporte efectivamente</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="interactive-box">
+                    <h3>💬 Pregunta para la audiencia</h3>
+                    <p>¿Alguien ha tenido problemas con Google Maps API en producción? ¿Qué tipo de errores han encontrado?</p>
+                </div>
+            </section>
+
+            <!-- Errores Comunes -->
+            <section id="errors" class="section">
+                <h2>🚨 Errores Comunes y Soluciones</h2>
+                
+                <div class="error-examples">
+                    <div class="error-card">
+                        <h3>🔑 API Key Inválida</h3>
+                        <div class="error-code">
+                            <code>Google Maps JavaScript API error: RefererNotAllowedMapError</code>
+                        </div>
+                        <div class="solution">
+                            <h4>✅ Solución:</h4>
+                            <ol>
+                                <li>Verificar restricciones de referrer en Google Cloud Console</li>
+                                <li>Agregar dominios permitidos</li>
+                                <li>Usar wildcards para desarrollo: <code>localhost:*</code></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="error-card">
+                        <h3>💳 Facturación No Habilitada</h3>
+                        <div class="error-code">
+                            <code>BillingNotEnabledMapError</code>
+                        </div>
+                        <div class="solution">
+                            <h4>✅ Solución:</h4>
+                            <ol>
+                                <li>Ir a Google Cloud Console</li>
+                                <li>Habilitar facturación en el proyecto</li>
+                                <li>Configurar método de pago</li>
+                                <li>Verificar límites de cuota</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="error-card">
+                        <h3>📚 Librerías No Habilitadas</h3>
+                        <div class="error-code">
+                            <code>LibraryNotLoadedError: places</code>
+                        </div>
+                        <div class="solution">
+                            <h4>✅ Solución:</h4>
+                            <ol>
+                                <li>Cargar librerías necesarias en el script</li>
+                                <li>Usar: <code>&libraries=places,geometry</code></li>
+                                <li>Verificar en Google Cloud Console</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-section">
+                    <h3>🔧 Demo: Diagnóstico de Errores</h3>
+                    <div class="demo-container">
+                        <div class="demo-controls">
+                            <button id="simulateError" class="btn btn-warning">Simular Error</button>
+                            <button id="fixError" class="btn btn-success">Aplicar Solución</button>
+                        </div>
+                        <div id="errorDemo" class="demo-area">
+                            <div class="map-placeholder">
+                                <p>Mapa funcionando correctamente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interactive-box">
+                    <h3>💬 Dinámica</h3>
+                    <p>¿Alguien ha visto el mensaje 'API key not valid' o 'Billing not enabled'? ¿Cómo lo resolvieron?</p>
+                </div>
+            </section>
+
+            <!-- Rendimiento -->
+            <section id="performance" class="section">
+                <h2>⚡ Solución de Problemas de Rendimiento</h2>
+                
+                <div class="performance-issues">
+                    <div class="issue-card">
+                        <h3>🐌 Cuellos de Botella Típicos</h3>
+                        <ul>
+                            <li><strong>Demasiados marcadores:</strong> Más de 100-200 marcadores</li>
+                            <li><strong>Demasiadas llamadas API:</strong> Requests excesivos</li>
+                            <li><strong>Renderizado pesado:</strong> Elementos complejos</li>
+                            <li><strong>Memoria:</strong> Event listeners no liberados</li>
+                        </ul>
+                    </div>
+
+                    <div class="issue-card">
+                        <h3>🎯 Técnicas de Optimización</h3>
+                        <ul>
+                            <li><strong>Clustering:</strong> Agrupar marcadores cercanos</li>
+                            <li><strong>Lazy Loading:</strong> Cargar datos bajo demanda</li>
+                            <li><strong>Debouncing:</strong> Limitar frecuencia de eventos</li>
+                            <li><strong>Cleanup:</strong> Limpiar listeners y objetos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="demo-section">
+                    <h3>🔧 Demo: Clustering de Marcadores</h3>
+                    <div class="demo-container">
+                        <div class="demo-controls">
+                            <button id="loadManyMarkers" class="btn btn-primary">Cargar 5000 Marcadores</button>
+                            <button id="enableClustering" class="btn btn-success">Habilitar Clustering</button>
+                            <button id="clearMarkers" class="btn btn-secondary">Limpiar</button>
+                        </div>
+                        <div id="clusteringDemo" class="demo-area">
+                            <div class="performance-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Marcadores:</span>
+                                    <span id="markerCount">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Tiempo de renderizado:</span>
+                                    <span id="renderTime">0ms</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Clusters:</span>
+                                    <span id="clusterCount">0</span>
+                                </div>
+                            </div>
+                            <div class="map-placeholder">
+                                <p>Mapa con clustering de marcadores</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3>💻 Ejemplo de Clustering</h3>
+                    <pre><code>// Cargar librería de clustering
+const script = document.createElement('script');
+script.src = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js';
+
+// Crear clusterer
+const markerClusterer = new MarkerClusterer(map, markers, {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+    maxZoom: 15,
+    gridSize: 50
+});</code></pre>
+                </div>
+
+                <div class="interactive-box">
+                    <h3>💬 Pregunta</h3>
+                    <p>¿Alguien ha tenido que optimizar mapas grandes? ¿Qué técnicas usaron?</p>
+                </div>
+            </section>
+
+            <!-- Soporte -->
+            <section id="support" class="section">
+                <h2>🛠️ Herramientas de Soporte y Documentación</h2>
+                
+                <div class="support-tools">
+                    <div class="tool-card">
+                        <h3>📊 Google Cloud Console</h3>
+                        <ul>
+                            <li>Monitoreo de uso y cuotas</li>
+                            <li>Logs de errores detallados</li>
+                            <li>Configuración de APIs</li>
+                            <li>Análisis de facturación</li>
+                        </ul>
+                        <a href="https://console.cloud.google.com" target="_blank" class="btn btn-primary">Abrir Console</a>
+                    </div>
+
+                    <div class="tool-card">
+                        <h3>📚 Documentación Oficial</h3>
+                        <ul>
+                            <li>Guías paso a paso</li>
+                            <li>Ejemplos prácticos</li>
+                            <li>Referencia de APIs</li>
+                            <li>Tutoriales interactivos</li>
+                        </ul>
+                        <a href="https://developers.google.com/maps/documentation" target="_blank" class="btn btn-primary">Ver Documentación</a>
+                    </div>
+
+                    <div class="tool-card">
+                        <h3>🔍 Herramientas de Debug</h3>
+                        <ul>
+                            <li>Console de desarrollador</li>
+                            <li>Network tab para requests</li>
+                            <li>Google Maps Platform Status</li>
+                            <li>Stack Overflow community</li>
+                        </ul>
+                        <a href="https://status.cloud.google.com" target="_blank" class="btn btn-primary">Estado de Servicios</a>
+                    </div>
+                </div>
+
+                <div class="debug-checklist">
+                    <h3>✅ Checklist de Debugging</h3>
+                    <div class="checklist-grid">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check1">
+                            <label for="check1">Verificar API key válida</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check2">
+                            <label for="check2">Revisar restricciones de dominio</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check3">
+                            <label for="check3">Confirmar facturación habilitada</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check4">
+                            <label for="check4">Verificar librerías cargadas</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check5">
+                            <label for="check5">Revisar logs de errores</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check6">
+                            <label for="check6">Probar en entorno limpio</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h3>💡 Tip Importante</h3>
+                    <p><strong>Siempre lee los mensajes de error completos.</strong> Google Maps API proporciona información detallada sobre qué está fallando y cómo solucionarlo.</p>
+                </div>
+            </section>
+
+            <!-- Recursos -->
+            <section id="resources" class="section">
+                <h2>📖 Referencia Oficial de Google Maps API</h2>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <h3>📖 Documentación Principal</h3>
+                        <ul>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript" target="_blank">JavaScript API</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/web-services" target="_blank">Web Services</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/android-sdk" target="_blank">Android SDK</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/ios-sdk" target="_blank">iOS SDK</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>🎓 Guías y Tutoriales</h3>
+                        <ul>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/tutorial" target="_blank">Tutorial Básico</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/examples" target="_blank">Ejemplos de Código</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/overview" target="_blank">Guía de Inicio</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/migration" target="_blank">Guía de Migración</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>📰 Recursos Actualizados</h3>
+                        <ul>
+                            <li><a href="https://developers.google.com/maps/blog" target="_blank">Blog de Google Maps Platform</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/releases" target="_blank">Notas de Versión</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/events" target="_blank">Eventos y Webinars</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/community" target="_blank">Comunidad</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>🛠️ Herramientas de Desarrollo</h3>
+                        <ul>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer" target="_blank">Marker Clusterer</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete" target="_blank">Places Autocomplete</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/examples/drawing-tools" target="_blank">Drawing Tools</a></li>
+                            <li><a href="https://developers.google.com/maps/documentation/javascript/examples/streetview" target="_blank">Street View</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="update-notice">
+                    <h3>🔄 Mantente Actualizado</h3>
+                    <p>Google actualiza constantemente la documentación y añade nuevas funciones. Te recomendamos:</p>
+                    <ul>
+                        <li>Seguir el <a href="https://developers.google.com/maps/blog" target="_blank">blog oficial</a></li>
+                        <li>Suscribirte a las <a href="https://developers.google.com/maps/documentation/javascript/releases" target="_blank">notas de versión</a></li>
+                        <li>Participar en la <a href="https://developers.google.com/maps/documentation/javascript/community" target="_blank">comunidad</a></li>
+                        <li>Revisar periódicamente la documentación</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Cierre -->
+            <section id="close" class="section">
+                <h2>🎯 Cierre del Módulo</h2>
+                
+                <div class="summary">
+                    <h3>📋 Resumen de lo Aprendido</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <h4>🚨 Errores Comunes</h4>
+                            <ul>
+                                <li>API keys inválidas</li>
+                                <li>Facturación no habilitada</li>
+                                <li>Librerías faltantes</li>
+                            </ul>
+                        </div>
+                        <div class="summary-item">
+                            <h4>⚡ Optimización</h4>
+                            <ul>
+                                <li>Clustering de marcadores</li>
+                                <li>Lazy loading</li>
+                                <li>Cleanup de recursos</li>
+                            </ul>
+                        </div>
+                        <div class="summary-item">
+                            <h4>🛠️ Herramientas</h4>
+                            <ul>
+                                <li>Google Cloud Console</li>
+                                <li>Documentación oficial</li>
+                                <li>Herramientas de debug</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-message">
+                    <h3>💡 Mensaje Clave</h3>
+                    <blockquote>
+                        "Los problemas son inevitables, pero con buenas prácticas, monitoreo adecuado y la documentación correcta, se pueden resolver rápidamente."
+                    </blockquote>
+                </div>
+
+                <div class="next-steps">
+                    <h3>🚀 Próximos Pasos</h3>
+                    <ul>
+                        <li>Implementar las técnicas aprendidas en tus proyectos</li>
+                        <li>Configurar monitoreo en producción</li>
+                        <li>Crear un checklist de debugging personalizado</li>
+                        <li>Mantenerte actualizado con las nuevas funciones</li>
+                    </ul>
+                </div>
+
+                <div class="interactive-box">
+                    <h3>💬 Comparte tu Experiencia</h3>
+                    <p>¿Alguien quiere compartir experiencias de resolución de problemas en sus propios proyectos con Google Maps API?</p>
+                </div>
+
+                <div class="contact-info">
+                    <h3>📞 Contacto y Soporte</h3>
+                    <p>Si tienes preguntas o necesitas ayuda adicional:</p>
+                    <ul>
+                        <li>📧 Email: soporte@ejemplo.com</li>
+                        <li>💬 Slack: #google-maps-support</li>
+                        <li>📚 Documentación: <a href="https://developers.google.com/maps/documentation" target="_blank">developers.google.com/maps</a></li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2024 Google Maps API Course - Módulo 8: Resolución de Problemas y Soporte</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

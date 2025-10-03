@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificador de Rutas - Google Maps</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+    <!-- Panel de control lateral -->
+    <div id="control-panel">
+        <h2>Planificador de Rutas</h2>
+
+        <!-- Carga de ubicaciones -->
+        <div class="section">
+            <h3>1. Cargar Ubicaciones</h3>
+            <div class="input-group">
+                <label for="json-file">Archivo JSON:</label>
+                <input type="file" id="json-file" accept=".json" />
+            </div>
+            <div class="input-group">
+                <label for="json-textarea">O pegar JSON:</label>
+                <textarea id="json-textarea"
+                    placeholder='[{"lat": 19.4326, "lng": -99.1332, "direccion": "Calle Ejemplo 123, Ciudad, Estado, México", "estado": "Verificada"}]'></textarea>
+            </div>
+            <button id="load-locations">Cargar Ubicaciones</button>
+            <div id="location-count"></div>
+        </div>
+
+        <!-- Ubicación inicial -->
+        <div class="section">
+            <h3>2. Ubicación Inicial</h3>
+            <div class="input-group">
+                <label for="origin-input">Dirección o coordenadas:</label>
+                <input type="text" id="origin-input" placeholder="Ej: Ciudad de México o 19.4326,-99.1332" />
+            </div>
+            <button id="set-origin">Establecer Origen</button>
+        </div>
+
+        <!-- Parámetros de planeación -->
+        <div class="section">
+            <h3>3. Parámetros de Planeación</h3>
+            <div class="input-group">
+                <label for="agents-count">Número de agentes:</label>
+                <input type="number" id="agents-count" min="1" max="10" value="2" />
+            </div>
+            <div class="input-group">
+                <label for="work-hours">Horas de trabajo por agente:</label>
+                <input type="number" id="work-hours" min="1" max="24" value="8" step="0.5" />
+            </div>
+            <div class="input-group">
+                <label for="travel-mode">Modo de viaje:</label>
+                <select id="travel-mode">
+                    <option value="DRIVING">En coche</option>
+                    <option value="WALKING">Caminando</option>
+                    <option value="BICYCLING">En bicicleta</option>
+                    <option value="TRANSIT">Transporte público</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="use-traffic" />
+                    Usar tráfico actual
+                </label>
+                <small style="color: #666; font-size: 11px; margin-top: 5px; display: block;">
+                    Nota: El tráfico se aplica solo a las rutas finales, no a la optimización inicial
+                </small>
+            </div>
+        </div>
+
+        <!-- Generar rutas -->
+        <div class="section">
+            <h3>4. Generar Rutas</h3>
+            <button id="generate-routes" disabled>Generar Rutas</button>
+            <div id="progress-container" style="display: none;">
+                <div id="progress-bar"></div>
+                <div id="progress-text">Procesando...</div>
+            </div>
+            <small style="color: #666; font-size: 11px; margin-top: 10px; display: block;">
+                <strong>Filosofía del algoritmo:</strong> Maximiza el número de puntos visitados dentro de las horas
+                asignadas.
+                Cada agente intentará cubrir la mayor cantidad de ubicaciones posible en su tiempo de trabajo.
+            </small>
+        </div>
+
+        <!-- Controles de visualización -->
+        <div class="section" id="routes-controls" style="display: none;">
+            <h3>5. Controles de Rutas</h3>
+            <div id="routes-list"></div>
+            <button id="center-all">Centrar en todas las rutas</button>
+            <button id="clear-routes">Ocultar todas las rutas</button>
+            <button id="toggle-clusters">Mostrar clusters</button>
+            <button id="toggle-agent-clusters">Mostrar clusters por agente</button>
+        </div>
+
+        <!-- Exportación -->
+        <div class="section">
+            <h3>6. Exportar</h3>
+            <button id="export-routes" disabled>Exportar JSON</button>
+        </div>
+
+        <!-- Resumen -->
+        <div class="section" id="summary" style="display: none;">
+            <h3>Resumen</h3>
+            <div id="summary-content"></div>
+        </div>
+    </div>
+
+    <!-- Mapa -->
+    <div id="map"></div>
+
+    <!-- Google Maps API -->
+    <script>
+        (g => {
+            var h, a, k, p="The Google Maps JavaScript API", c="google", l="importLibrary", q="__ib__", m=document, b=window;
+            b=b[c]||(b[c]={});
+            var d=b.maps||(b.maps={}), r=new Set, e=new URLSearchParams, u=() => h||(h=new Promise(async (f, n) => {
+                await (a=m.createElement("script"));
+                e.set("libraries", [...r]+"");
+                for(k in g) e.set(k.replace(/[A-Z]/g, t => "_"+t[0].toLowerCase()), g[k]);
+                e.set("callback", c+".maps."+q);
+                a.src=`https://maps.${c}apis.com/maps/api/js?`+e;
+                d[q]=f;
+                a.onerror=() => h=n(Error(p+" could not load."));
+                a.nonce=m.querySelector("script[nonce]")?.nonce||"";
+                m.head.append(a)
+            }));
+            d[l]? console.warn(p+" only loads once. Ignoring:", g):d[l]=(f, ...n) => r.add(f)&&u().then(() => d[l](f, ...n))
+        })({
+            key: "AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8",
+            v: "weekly",
+            language: "es-419",
+            libraries: ["places", "geometry"]
+        });
+    </script>
+</body>
+
+</html>

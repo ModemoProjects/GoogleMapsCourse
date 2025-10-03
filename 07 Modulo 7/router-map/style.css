@@ -1,0 +1,477 @@
+/* Reset y configuración base */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Layout principal */
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Panel de control lateral */
+#control-panel {
+    width: 350px;
+    min-width: 300px;
+    height: 100vh;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+#control-panel h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 24px;
+    border-bottom: 2px solid #4285f4;
+    padding-bottom: 10px;
+}
+
+#control-panel h3 {
+    margin: 20px 0 15px 0;
+    color: #555;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Secciones */
+.section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #4285f4;
+}
+
+/* Grupos de input */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #4285f4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+.input-group textarea {
+    height: 80px;
+    resize: vertical;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
+
+.input-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.input-group input[type="number"] {
+    width: 100px;
+}
+
+/* Botones */
+button {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+button:hover:not(:disabled) {
+    background: #3367d6;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Botón específico para ocultar rutas */
+#clear-routes {
+    background: #34a853;
+    margin-top: 5px;
+}
+
+#clear-routes:hover:not(:disabled) {
+    background: #2d8f47;
+}
+
+/* Botón específico para clusters */
+#toggle-clusters {
+    background: #9b59b6;
+    margin-top: 5px;
+}
+
+#toggle-clusters:hover:not(:disabled) {
+    background: #8e44ad;
+}
+
+/* Botón específico para clusters por agente */
+#toggle-agent-clusters {
+    background: #e74c3c;
+    margin-top: 5px;
+}
+
+#toggle-agent-clusters:hover:not(:disabled) {
+    background: #c0392b;
+}
+
+/* Estilo para etiquetas de agentes */
+.agent-label {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo para etiquetas individuales de agentes */
+.individual-agent-label {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Botón de cluster individual en la lista de rutas */
+.cluster-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    margin-left: 5px;
+}
+
+.cluster-btn:hover {
+    background: #5a6268;
+}
+
+.cluster-btn:active {
+    transform: translateY(1px);
+}
+
+/* Barra de progreso */
+#progress-container {
+    margin-top: 15px;
+}
+
+#progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#progress-bar::after {
+    content: '';
+    display: block;
+    width: var(--progress, 0%);
+    height: 100%;
+    background: linear-gradient(90deg, #4285f4, #34a853);
+    transition: width 0.3s ease;
+}
+
+@keyframes progress-animation {
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 70%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+#progress-text {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Lista de rutas */
+#routes-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.route-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border-left: 5px solid #4285f4;
+}
+
+.route-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    border-left-color: #3367d6;
+}
+
+.route-info {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.route-info strong {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.route-info small {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    display: block;
+}
+
+.route-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 20px;
+    border: 3px solid #fff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.route-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.route-controls button {
+    padding: 8px 16px;
+    font-size: 13px;
+    margin: 0;
+    border-radius: 6px;
+    font-weight: 500;
+    min-width: 70px;
+    transition: all 0.2s ease;
+}
+
+.route-controls button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Responsive para lista de rutas */
+@media (max-width: 768px) {
+    .route-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+    
+    .route-info {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .route-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .route-controls button {
+        flex: 1;
+        margin: 0 5px;
+    }
+}
+
+/* Contador de ubicaciones */
+#location-count {
+    margin-top: 10px;
+    padding: 8px;
+    background: #e8f0fe;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #1a73e8;
+    text-align: center;
+}
+
+/* Resumen */
+#summary-content {
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Mapa */
+#map {
+    flex: 1;
+    height: 100vh;
+    position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    #control-panel {
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    #map {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    #control-panel {
+        padding: 10px;
+    }
+
+    .section {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Mensajes de error */
+.error {
+    color: #d93025;
+    background: #fce8e6;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+/* Mensajes de éxito */
+.success {
+    color: #137333;
+    background: #e6f4ea;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+/* Tooltips personalizados */
+.custom-tooltip {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 200px;
+}
+
+/* Animaciones */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}

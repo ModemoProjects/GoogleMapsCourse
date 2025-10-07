@@ -7,7 +7,7 @@
     <application android:label="León, Guanajuato - Mapa Interactivo" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
 
         <!-- API Key de Google Maps -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyALQc7iuBQ1xc39pSP8sci_ynfh1WAYREE" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="<Dummy-API-Key>" />
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user

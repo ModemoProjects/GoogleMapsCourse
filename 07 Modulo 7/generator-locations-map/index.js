@@ -54,7 +54,7 @@ const CONFIG = {
 /**
  * Inicialización de la aplicación
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeEventListeners();
     updateStatusDisplay();
 });
@@ -65,16 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeEventListeners() {
     // Botón de búsqueda
     document.getElementById('searchBtn').addEventListener('click', startSearch);
-    
+
     // Botón de cancelación
     document.getElementById('cancelBtn').addEventListener('click', cancelSearch);
-    
+
     // Botón de exportación
     document.getElementById('exportBtn').addEventListener('click', exportToJSON);
-    
+
     // Cambio en el área de búsqueda
     document.getElementById('searchArea').addEventListener('change', toggleCustomAreaConfig);
-    
+
     // Validación de entrada en tiempo real
     document.getElementById('numLocations').addEventListener('input', validateInputs);
 }
@@ -85,7 +85,7 @@ function initializeEventListeners() {
 function toggleCustomAreaConfig() {
     const customConfig = document.getElementById('customAreaConfig');
     const searchArea = document.getElementById('searchArea').value;
-    
+
     if (searchArea === 'custom') {
         customConfig.style.display = 'block';
     } else {
@@ -99,8 +99,8 @@ function toggleCustomAreaConfig() {
 function validateInputs() {
     const numLocations = parseInt(document.getElementById('numLocations').value);
     const searchBtn = document.getElementById('searchBtn');
-    
-    if (numLocations && numLocations > 0 && numLocations <= 100) {
+
+    if (numLocations && numLocations > 0 && numLocations <= 500) {
         searchBtn.disabled = false;
     } else {
         searchBtn.disabled = true;
@@ -112,7 +112,7 @@ function validateInputs() {
  */
 function getSearchAreaConfig() {
     const searchArea = document.getElementById('searchArea').value;
-    
+
     if (searchArea === 'custom') {
         return {
             center: {
@@ -122,7 +122,7 @@ function getSearchAreaConfig() {
             radius: parseInt(document.getElementById('radius').value) || 10
         };
     }
-    
+
     return AREAS_CONFIG[searchArea] || AREAS_CONFIG['mexico-city'];
 }
 
@@ -135,22 +135,22 @@ function getSearchAreaConfig() {
 function generateRandomCoordinates(areaConfig, count) {
     const coordinates = [];
     const { center, radius } = areaConfig;
-    
+
     // Convertir radio de km a grados (aproximado)
     const latRange = radius / 111; // 1 grado de latitud ≈ 111 km
     const lngRange = radius / (111 * Math.cos(center.lat * Math.PI / 180));
-    
+
     for (let i = 0; i < count; i++) {
         // Generar coordenadas aleatorias dentro del área circular
         const angle = Math.random() * 2 * Math.PI;
         const distance = Math.random() * radius;
-        
+
         const lat = center.lat + (distance / 111) * Math.cos(angle);
         const lng = center.lng + (distance / (111 * Math.cos(center.lat * Math.PI / 180))) * Math.sin(angle);
-        
+
         coordinates.push({ lat, lng });
     }
-    
+
     return coordinates;
 }
 
@@ -162,21 +162,21 @@ function generateRandomCoordinates(areaConfig, count) {
  */
 async function performReverseGeocoding(coordinate, retryCount = 0) {
     const cacheKey = `${coordinate.lat.toFixed(4)},${coordinate.lng.toFixed(4)}`;
-    
+
     // Verificar cache primero
     if (geocodeCache.has(cacheKey)) {
         return geocodeCache.get(cacheKey);
     }
-    
+
     try {
         const startTime = Date.now();
-        
+
         // Crear instancia de Geocoder si no existe
         if (!geocoder) {
             const { Geocoder } = await google.maps.importLibrary("geocoding");
             geocoder = new Geocoder();
         }
-        
+
         const result = await new Promise((resolve, reject) => {
             geocoder.geocode({ location: coordinate }, (results, status) => {
                 if (status === 'OK' && results && results.length > 0) {
@@ -186,29 +186,29 @@ async function performReverseGeocoding(coordinate, retryCount = 0) {
                 }
             });
         });
-        
+
         const endTime = Date.now();
         const responseTime = endTime - startTime;
-        
+
         // Actualizar estadísticas
         searchStats.apiCalls++;
         searchStats.totalTime += responseTime;
-        
+
         // Cachear resultado
         geocodeCache.set(cacheKey, result);
-        
+
         return result;
-        
+
     } catch (error) {
         console.warn(`Error en reverse geocoding (intento ${retryCount + 1}):`, error);
-        
+
         // Implementar backoff exponencial para reintentos
         if (retryCount < CONFIG.MAX_RETRIES) {
             const delay = CONFIG.RETRY_DELAY_BASE * Math.pow(2, retryCount);
             await new Promise(resolve => setTimeout(resolve, delay));
             return performReverseGeocoding(coordinate, retryCount + 1);
         }
-        
+
         searchStats.failed++;
         return null;
     }
@@ -228,10 +228,10 @@ function validateAddressComponents(geocodeResult) {
         'country',
         'postal_code'
     ];
-    
+
     const addressComponents = geocodeResult.address_components || [];
     const extractedComponents = {};
-    
+
     // Extraer componentes de la dirección
     addressComponents.forEach(component => {
         component.types.forEach(type => {
@@ -240,12 +240,12 @@ function validateAddressComponents(geocodeResult) {
             }
         });
     });
-    
+
     // Verificar que todos los componentes requeridos estén presentes
-    const isValid = requiredComponents.every(component => 
+    const isValid = requiredComponents.every(component =>
         extractedComponents[component] && extractedComponents[component].trim() !== ''
     );
-    
+
     return {
         isValid,
         components: extractedComponents,
@@ -262,21 +262,21 @@ function validateAddressComponents(geocodeResult) {
 async function processCoordinatesInBatches(coordinates, onProgress) {
     const verifiedLocations = [];
     const batchSize = CONFIG.MAX_CONCURRENT_REQUESTS;
-    
+
     for (let i = 0; i < coordinates.length; i += batchSize) {
         if (searchCancelled) break;
-        
+
         const batch = coordinates.slice(i, i + batchSize);
         const batchPromises = batch.map(async (coordinate) => {
             if (searchCancelled) return null;
-            
+
             // Intentar hasta MAX_ATTEMPTS_PER_LOCATION veces
             for (let attempt = 0; attempt < CONFIG.MAX_ATTEMPTS_PER_LOCATION; attempt++) {
                 if (searchCancelled) return null;
-                
+
                 const geocodeResult = await performReverseGeocoding(coordinate);
                 if (!geocodeResult) continue;
-                
+
                 const validation = validateAddressComponents(geocodeResult);
                 if (validation.isValid) {
                     searchStats.verified++;
@@ -289,25 +289,25 @@ async function processCoordinatesInBatches(coordinates, onProgress) {
                     };
                 }
             }
-            
+
             searchStats.failed++;
             return null;
         });
-        
+
         const batchResults = await Promise.all(batchPromises);
         const validResults = batchResults.filter(result => result !== null);
         verifiedLocations.push(...validResults);
-        
+
         // Actualizar progreso
         const progress = Math.min(100, (verifiedLocations.length / parseInt(document.getElementById('numLocations').value)) * 100);
         onProgress(progress, verifiedLocations.length);
-        
+
         // Pequeña pausa entre lotes para evitar rate limiting
         if (i + batchSize < coordinates.length) {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
     }
-    
+
     return verifiedLocations;
 }
 
@@ -316,13 +316,13 @@ async function processCoordinatesInBatches(coordinates, onProgress) {
  */
 async function initializeMap() {
     if (map) return; // El mapa ya está inicializado
-    
+
     try {
         const { Map } = await google.maps.importLibrary("maps");
-        
+
         // Obtener configuración del área de búsqueda
         const areaConfig = getSearchAreaConfig();
-        
+
         map = new Map(document.getElementById("map"), {
             center: areaConfig.center,
             zoom: 12,
@@ -335,12 +335,12 @@ async function initializeMap() {
                 }
             ]
         });
-        
+
         // Limpiar placeholder
         const mapElement = document.getElementById('map');
         mapElement.innerHTML = '';
         mapElement.style.background = 'transparent';
-        
+
     } catch (error) {
         console.error('Error al inicializar el mapa:', error);
         showNotification('Error al cargar el mapa de Google Maps', 'error');
@@ -355,11 +355,11 @@ function addMarkersToMap(locations) {
     // Limpiar marcadores existentes
     markers.forEach(marker => marker.setMap(null));
     markers = [];
-    
+
     if (!map || locations.length === 0) return;
-    
+
     const bounds = new google.maps.LatLngBounds();
-    
+
     locations.forEach((location, index) => {
         const marker = new google.maps.Marker({
             position: { lat: location.lat, lng: location.lng },
@@ -368,7 +368,7 @@ function addMarkersToMap(locations) {
             label: (index + 1).toString(),
             animation: google.maps.Animation.DROP
         });
-        
+
         // InfoWindow con detalles de la ubicación
         const infoWindow = new google.maps.InfoWindow({
             content: `
@@ -381,15 +381,15 @@ function addMarkersToMap(locations) {
                 </div>
             `
         });
-        
+
         marker.addListener('click', () => {
             infoWindow.open(map, marker);
         });
-        
+
         markers.push(marker);
         bounds.extend(marker.getPosition());
     });
-    
+
     // Ajustar la vista del mapa para mostrar todos los marcadores
     if (locations.length > 1) {
         map.fitBounds(bounds);
@@ -406,9 +406,9 @@ function addMarkersToMap(locations) {
 function displayResults(locations) {
     const resultsList = document.getElementById('resultsList');
     const resultsCount = document.getElementById('resultsCount');
-    
+
     resultsCount.textContent = `${locations.length} ubicaciones`;
-    
+
     if (locations.length === 0) {
         resultsList.innerHTML = `
             <div class="no-results">
@@ -417,7 +417,7 @@ function displayResults(locations) {
         `;
         return;
     }
-    
+
     resultsList.innerHTML = locations.map((location, index) => `
         <div class="result-item">
             <div class="result-header">
@@ -427,9 +427,9 @@ function displayResults(locations) {
             <div class="result-address">${location.direccion}</div>
             <div class="result-components">
                 <strong>Componentes:</strong><br>
-                ${Object.entries(location.componentes).map(([key, value]) => 
-                    `<span style="margin-right: 10px;"><strong>${key}:</strong> ${value}</span>`
-                ).join('<br>')}
+                ${Object.entries(location.componentes).map(([key, value]) =>
+        `<span style="margin-right: 10px;"><strong>${key}:</strong> ${value}</span>`
+    ).join('<br>')}
             </div>
         </div>
     `).join('');
@@ -442,8 +442,8 @@ function updateStatusDisplay() {
     document.getElementById('apiCalls').textContent = searchStats.apiCalls;
     document.getElementById('verifiedCount').textContent = searchStats.verified;
     document.getElementById('failedCount').textContent = searchStats.failed;
-    
-    const avgTime = searchStats.apiCalls > 0 ? 
+
+    const avgTime = searchStats.apiCalls > 0 ?
         Math.round(searchStats.totalTime / searchStats.apiCalls) : 0;
     document.getElementById('avgTime').textContent = `${avgTime}ms`;
 }
@@ -456,10 +456,10 @@ function updateStatusDisplay() {
 function updateProgress(progress, verifiedCount) {
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
-    
+
     progressFill.style.width = `${progress}%`;
     progressText.textContent = `${Math.round(progress)}%`;
-    
+
     updateStatusDisplay();
 }
 
@@ -468,70 +468,70 @@ function updateProgress(progress, verifiedCount) {
  */
 async function startSearch() {
     if (searchInProgress) return;
-    
+
     // Validar entradas
     const numLocations = parseInt(document.getElementById('numLocations').value);
     if (!numLocations || numLocations < 1 || numLocations > 100) {
         showNotification('Por favor, ingresa un número válido de ubicaciones (1-100)', 'error');
         return;
     }
-    
+
     // Reiniciar estado
     searchInProgress = true;
     searchCancelled = false;
     resetSearchStats();
-    
+
     // Actualizar UI
     document.getElementById('searchBtn').disabled = true;
     document.getElementById('cancelBtn').disabled = false;
     document.getElementById('exportBtn').disabled = true;
-    
+
     // Limpiar resultados anteriores
     document.getElementById('resultsList').innerHTML = `
         <div class="no-results">
             <p>Buscando ubicaciones verificadas...</p>
         </div>
     `;
-    
+
     try {
         // Inicializar mapa (carga diferida)
         await initializeMap();
-        
+
         // Obtener configuración del área
         const areaConfig = getSearchAreaConfig();
-        
+
         // Generar coordenadas aleatorias (más de las necesarias para compensar fallos)
         const totalCoordinates = Math.min(numLocations * 3, 200); // Límite de seguridad
         const coordinates = generateRandomCoordinates(areaConfig, totalCoordinates);
-        
+
         showNotification(`Iniciando búsqueda de ${numLocations} ubicaciones verificadas...`, 'info');
-        
+
         // Procesar coordenadas en lotes
         const verifiedLocations = await processCoordinatesInBatches(
-            coordinates, 
+            coordinates,
             updateProgress
         );
-        
+
         if (searchCancelled) {
             showNotification('Búsqueda cancelada por el usuario', 'warning');
             return;
         }
-        
+
         // Mostrar resultados
         displayResults(verifiedLocations);
         addMarkersToMap(verifiedLocations);
-        
+
         // Habilitar exportación si hay resultados
         if (verifiedLocations.length > 0) {
             document.getElementById('exportBtn').disabled = false;
             showNotification(
-                `Búsqueda completada: ${verifiedLocations.length} ubicaciones verificadas encontradas`, 
+                `Búsqueda completada: ${verifiedLocations.length} ubicaciones verificadas encontradas`,
                 'success'
             );
         } else {
             showNotification('No se encontraron ubicaciones verificadas. Intenta con un área diferente.', 'warning');
         }
-        
+
     } catch (error) {
         console.error('Error durante la búsqueda:', error);
         showNotification('Error durante la búsqueda. Verifica tu conexión y configuración.', 'error');
@@ -549,10 +549,10 @@ async function startSearch() {
 function cancelSearch() {
     searchCancelled = true;
     searchInProgress = false;
-    
+
     document.getElementById('searchBtn').disabled = false;
     document.getElementById('cancelBtn').disabled = true;
-    
+
     showNotification('Cancelando búsqueda...', 'warning');
 }
 
@@ -565,7 +565,7 @@ function resetSearchStats() {
     searchStats.failed = 0;
     searchStats.totalTime = 0;
     searchStats.startTime = Date.now();
-    
+
     updateStatusDisplay();
     updateProgress(0, 0);
 }
@@ -576,21 +576,21 @@ function resetSearchStats() {
 function exportToJSON() {
     const resultsList = document.getElementById('resultsList');
     const resultItems = resultsList.querySelectorAll('.result-item');
-    
+
     if (resultItems.length === 0) {
         showNotification('No hay resultados para exportar', 'warning');
         return;
     }
-    
+
     // Extraer datos de los elementos DOM
     const exportData = Array.from(resultItems).map((item, index) => {
         const coords = item.querySelector('.result-coords').textContent.split(', ');
         const address = item.querySelector('.result-address').textContent;
-        
+
         // Extraer componentes del texto
         const componentsText = item.querySelector('.result-components').textContent;
         const components = {};
-        
+
         // Parsear componentes (formato: "key: value")
         const componentMatches = componentsText.match(/(\w+):\s*([^,\n]+)/g);
         if (componentMatches) {
@@ -599,7 +599,7 @@ function exportToJSON() {
                 components[key] = value;
             });
         }
-        
+
         return {
             lat: parseFloat(coords[0]),
             lng: parseFloat(coords[1]),
@@ -608,21 +608,21 @@ function exportToJSON() {
             estado: 'Verificada'
         };
     });
-    
+
     // Crear y descargar archivo JSON
     const jsonString = JSON.stringify(exportData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
+
     const link = document.createElement('a');
     link.href = url;
     link.download = `ubicaciones_verificadas_${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     URL.revokeObjectURL(url);
-    
+
     showNotification(`Archivo JSON descargado: ${exportData.length} ubicaciones`, 'success');
 }
 
@@ -636,7 +636,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    
+
     // Estilos de notificación
     Object.assign(notification.style, {
         position: 'fixed',
@@ -652,7 +652,7 @@ function showNotification(message, type = 'info') {
         transform: 'translateX(100%)',
         transition: 'transform 0.3s ease'
     });
-    
+
     // Colores según tipo
     const colors = {
         success: '#27ae60',
@@ -661,15 +661,15 @@ function showNotification(message, type = 'info') {
         info: '#3498db'
     };
     notification.style.backgroundColor = colors[type] || colors.info;
-    
+
     // Agregar al DOM
     document.body.appendChild(notification);
-    
+
     // Animar entrada
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
-    
+
     // Remover después de 4 segundos
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';

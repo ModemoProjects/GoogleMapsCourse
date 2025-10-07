@@ -12,7 +12,7 @@
 
 // ===== CONFIGURACIÓN Y CONSTANTES =====
 const CONFIG = {
-    API_KEY: 'AIzaSyACnySD7qVyCSIrSZujmtSFlHesnd3eKos',
+    API_KEY: '<Dummy-API-Key>',
     DEFAULT_CENTER: { lat: 21.1230729, lng: -101.6650775 },
     DEFAULT_ZOOM: 11,
     STATIC_MAP_SIZE: '600x400',

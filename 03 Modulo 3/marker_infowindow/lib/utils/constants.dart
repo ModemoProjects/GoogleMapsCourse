@@ -38,6 +38,5 @@ class AppConstants {
   static const double elevation = 8.0;
 
   // API Key de Google Maps (debes reemplazar con tu propia API key)
-  static const String googleMapsApiKey =
-      'AIzaSyALQc7iuBQ1xc39pSP8sci_ynfh1WAYREE';
+  static const String googleMapsApiKey = '<Dummy-API-Key>';
 }

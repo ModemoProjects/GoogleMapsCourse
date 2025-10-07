@@ -54,7 +54,7 @@ Un demo completo de Google Maps JavaScript API con Places Library que combina b√
 
 1. **Clonar o descargar el proyecto**
 2. **Configurar la API Key**:
-   - Reemplazar `AIzaSyA6myHzS10YXdcazAFalmXvDkrYCp5cLc8` en `index.html`
+   - Reemplazar `<Dummy-API-Key>` en `index.html`
    - Configurar restricciones de seguridad en Google Cloud Console
 
 3. **Ejecutar el proyecto**:

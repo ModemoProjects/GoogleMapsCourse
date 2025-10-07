@@ -26,7 +26,7 @@
 
 // Configuración de la API de Google Maps
 const GOOGLE_MAPS_CONFIG = {
-    key: 'AIzaSyACnySD7qVyCSIrSZujmtSFlHesnd3eKos', // Reemplaza con tu API key
+    key: '<Dummy-API-Key>', // Reemplaza con tu API key
     libraries: ['places', 'geometry'],
     language: 'es-419',
     region: 'MX'

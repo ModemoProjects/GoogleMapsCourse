@@ -1,7 +1,7 @@
 class GoogleMapsConfig {
   // IMPORTANTE: Reemplaza esta clave con tu propia API key de Google Maps
   // Obtén tu API key en: https://console.cloud.google.com/google/maps-apis
-  static const String apiKey = 'AIzaSyALQc7iuBQ1xc39pSP8sci_ynfh1WAYREE';
+  static const String apiKey = '<Dummy-API-Key>';
 
   // Configuración por defecto del mapa
   static const double defaultZoom = 10.0;
